@@ -65,4 +65,4 @@ for k in 1:N
     end 
 end
 
-println(sqrt(det(U)))
+println(0.5* logabsdet(U)[1] )
