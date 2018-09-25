@@ -17,18 +17,18 @@ end
 
 function lnZ(N, K, lattice)
     offset = 2*K*(N-sqrt(N))
-    res = offset
+    res = 0.0
     println("offset: ", offset)
     for config in 0:(1<<N-1)
         #println(config, ' ', energy(N, K, config, lattice))
         res += exp(energy(N, K, config, lattice)-offset)
     end
-    log(res)
+    offset + log(res)
 end
 
 L = 4
 N = L^2 
-K = 1.0
-lattice = build_Nbr(L)
+K = 10.0
+lattice = build_open(L)
 
-println(lnZ(N, K, lattice))
+println(lnZ(N, K, lattice)/N)

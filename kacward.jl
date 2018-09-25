@@ -1,68 +1,70 @@
 include("./lattice.jl")
 
-N = 6
-¦Â = 1.0 
-¦Í = tanh(¦Â)
-¦Á = exp(im*pi/4)*¦Í
-u¡ú = [[¦Í ¦Á 0 conj(¦Á)]; 
+L = 4
+N = L^2
+K = 10.0
+
+#lattice
+Nbr = build_open(L)
+
+nu = tanh(K)
+alpha = exp(im*pi/4)*nu
+uright = [[nu alpha 0 conj(alpha)]; 
       [0  0  0  0];
       [0  0  0  0];
       [0  0  0  0];
      ]
 
-u¡ü = [[0  0  0  0];
-      [conj(¦Á) ¦Í ¦Á 0]; 
+uup = [[0  0  0  0];
+      [conj(alpha) nu alpha 0]; 
       [0  0  0  0];
       [0  0  0  0];
      ]
 
-u¡û = [[0  0  0  0];
+uleft = [[0  0  0  0];
       [0  0  0  0];
-      [0 conj(¦Á) ¦Í ¦Á]; 
+      [0 conj(alpha) nu alpha]; 
       [0  0  0  0];
      ]
 
-u¡ý = [[0  0  0  0];
+udown = [[0  0  0  0];
       [0  0  0  0];
       [0  0  0  0];
-      [¦Á 0 conj(¦Á) ¦Í];
+      [alpha 0 conj(alpha) nu];
      ]
 
-#Neighbor table
-Nbr = build_Nbr(N)
-
-U = zeros(4*N)
+U = zeros(Complex128, 4*N, 4*N)
 for k in 1:N
-    for n in 1:N
+    for n in 1:4
         j = 4*(k-1) + n 
-        U[j, j] = 1
+        U[j, j] = 1.0
         for nprime in 1:4
             #right 
             kprime = Nbr[1, k]
             if kprime != 0
                 jprime = 4*(kprime -1) + nprime
-                U[j, jprime] = u¡ú[n, nprime]
+                U[j, jprime] = uright[n, nprime]
             end
             #up
             kprime = Nbr[2, k]
             if kprime != 0
                 jprime = 4*(kprime -1) + nprime
-                U[j, jprime] = u¡ü[n, nprime]
+                U[j, jprime] = uup[n, nprime]
             end
             #left
             kprime = Nbr[3, k]
             if kprime != 0
                 jprime = 4*(kprime -1) + nprime
-                U[j, jprime] = u¡û[n, nprime]
+                U[j, jprime] = uleft[n, nprime]
             end
             #down
             kprime = Nbr[4, k]
             if kprime != 0
                 jprime = 4*(kprime -1) + nprime
-                U[j, jprime] = u¡ý[n, nprime]
+                U[j, jprime] = udown[n, nprime]
             end
         end
     end 
 end
 
-println(0.5* logabsdet(U)[1] )
+println(log(2.0*cosh(K)) +  0.5*logdet(U)/N )
