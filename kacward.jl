@@ -1,57 +1,35 @@
+include("./lattice.jl")
+
 N = 6
 ¦Â = 1.0 
-¦Í = tanh(beta)
-¦Á = exp(im*pi/4) * ¦Í
-u¡ú = [[¦Í a 0 conj(¦Á)]; 
+¦Í = tanh(¦Â)
+¦Á = exp(im*pi/4)*¦Í
+u¡ú = [[¦Í ¦Á 0 conj(¦Á)]; 
       [0  0  0  0];
       [0  0  0  0];
-      [0  0  0  0]
+      [0  0  0  0];
      ]
 
 u¡ü = [[0  0  0  0];
       [conj(¦Á) ¦Í ¦Á 0]; 
       [0  0  0  0];
-      [0  0  0  0]
+      [0  0  0  0];
      ]
 
 u¡û = [[0  0  0  0];
       [0  0  0  0];
       [0 conj(¦Á) ¦Í ¦Á]; 
-      [0  0  0  0]
+      [0  0  0  0];
      ]
 
 u¡ý = [[0  0  0  0];
       [0  0  0  0];
       [0  0  0  0];
-      [¦Á 0 conj(¦Á) ¦Í]
+      [¦Á 0 conj(¦Á) ¦Í];
      ]
 
 #Neighbor table
-Nbr = zeros(N)
-for k in 0:N*N-1
-    x = div(k, N)
-    y = rem(k, N) 
-        
-    #right
-    if x+1 < N-1
-        Nbr[1, k] = (x+1)*N + y +1 
-    end
-
-    #up 
-    if y+1 < N-1
-        Nbr[2, k] = x*N + (y+1) +1
-    end
-
-    #left
-    if x-1 > 0
-        Nbr[3, k] = (x-1)*N + y +1
-    end
-
-    #down
-    if y+1 < N-1
-        Nbr[4, k] = x*N + (y-1) +1
-    end
-end
+Nbr = build_Nbr(N)
 
 U = zeros(4*N)
 for k in 1:N
