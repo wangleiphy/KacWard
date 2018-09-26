@@ -28,7 +28,7 @@ end
 
 L = 4
 N = L^2 
-K = 10.0
+K = 1.0
 lattice = build_open(L)
 
 println(lnZ(N, K, lattice)/N)

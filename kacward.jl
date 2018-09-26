@@ -1,8 +1,9 @@
 include("./lattice.jl")
+using LinearAlgebra: logdet
 
 L = 4
 N = L^2
-K = 10.0
+K = 1.0
 
 #lattice
 Nbr = build_open(L)
@@ -33,7 +34,7 @@ udown = [[0  0  0  0];
       [alpha 0 conj(alpha) nu];
      ]
 
-U = zeros(Complex128, 4*N, 4*N)
+U = zeros(Complex{Float64}, 4*N, 4*N)
 for k in 1:N
     for n in 1:4
         j = 4*(k-1) + n 
@@ -67,4 +68,5 @@ for k in 1:N
     end 
 end
 
-println(log(2.0*cosh(K)) +  0.5*logdet(U)/N )
+#number of edges 2*(N-L)
+println(log(2) + 2*(N-L)/N*log(cosh(K)) +  0.5*logdet(U)/N)
