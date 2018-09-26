@@ -7,12 +7,12 @@ struct SquareLattice{BC}<: Lattice{2,BC}
 
     function SquareLattice{:periodic}(Lx::Int, Ly::Int) 
         #Neighbor table
-        Nbr = zeros(Int, 4, Lx, Ly)
+        Nbr = zeros(Int, 4, Lx*Ly)
         sites = reshape(1:Lx*Ly, Lx, Ly)
-        Nbr[1, :] .= circshift(sites, (1, 0))
-        Nbr[2, :] .= circshift(sites, (0, 1))
-        Nbr[3, :] .= circshift(sites, (-1, 0))
-        Nbr[4, :] .= circshift(sites, (0, -1))
+        Nbr[1, :] .= reshape(circshift(sites, (-1, 0)), Lx*Ly)
+        Nbr[2, :] .= reshape(circshift(sites, (0, -1)), Lx*Ly)
+        Nbr[3, :] .= reshape(circshift(sites, (1, 0)), Lx*Ly)
+        Nbr[4, :] .= reshape(circshift(sites, (0, 1)), Lx*Ly)
         new{:periodic}(Nbr)
     end 
 
