@@ -1,12 +1,12 @@
-include("./lattice.jl")
+include("./load.jl")
 using LinearAlgebra: logdet
+using Lattices: Lattice, SquareLattice
 
 L = 4
 N = L^2
 K = 1.0
 
-#lattice
-Nbr = build_open(L)
+lattice = SquareLattice{:open}(L, L)
 
 nu = tanh(K)
 alpha = exp(im*pi/4)*nu
@@ -41,25 +41,25 @@ for k in 1:N
         U[j, j] = 1.0
         for nprime in 1:4
             #right 
-            kprime = Nbr[1, k]
+            kprime = lattice.Nbr[1, k]
             if kprime != 0
                 jprime = 4*(kprime -1) + nprime
                 U[j, jprime] = uright[n, nprime]
             end
             #up
-            kprime = Nbr[2, k]
+            kprime = lattice.Nbr[2, k]
             if kprime != 0
                 jprime = 4*(kprime -1) + nprime
                 U[j, jprime] = uup[n, nprime]
             end
             #left
-            kprime = Nbr[3, k]
+            kprime = lattice.Nbr[3, k]
             if kprime != 0
                 jprime = 4*(kprime -1) + nprime
                 U[j, jprime] = uleft[n, nprime]
             end
             #down
-            kprime = Nbr[4, k]
+            kprime = lattice.Nbr[4, k]
             if kprime != 0
                 jprime = 4*(kprime -1) + nprime
                 U[j, jprime] = udown[n, nprime]
@@ -68,5 +68,5 @@ for k in 1:N
     end 
 end
 
-#number of edges 2*(N-L)
+#number of edges 2*(N-L) for open square lattice
 println(log(2) + 2*(N-L)/N*log(cosh(K)) +  0.5*logdet(U)/N)
